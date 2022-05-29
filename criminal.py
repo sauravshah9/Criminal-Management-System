@@ -244,8 +244,11 @@ class Criminal:
         #All button
         btn_all=Button(search_frame,text='Show All',font =('arial', 13, 'bold'),width=14, bg='blue',fg='white')
         btn_all.grid(row=0,column=4,padx=3,pady=2)
-    
-
+        
+        crimeagency = Label(search_frame, text='NATIONAL CRIME AGENCY', font=('arial', 30, 'bold'), fg="crimson", bg="white")
+        lbl_gender.grid(row=0, column=5, padx=50, pady=0 ,sticky=W)
+        
+        #Table Frame
         table_frame=Frame(down_frame,bd=2,relief=RIDGE)
         table_frame.place(x=0,y=50,width=1470, height=170)
         
@@ -254,7 +257,47 @@ class Criminal:
         scroll_y=ttk.Scrollbar(table_frame,orient=VERTICAL)
         
         
-        self.criminal_table=ttk.Treeview(table_frame,column=("1",))
+        self.criminal_table = ttk.Treeview(table_frame, column=("1","2","3","4","5","6","7","8","9","10","11","12","13","14"),xscrollcommand=scroll_x.set,yscrollcommand=scroll_y.set)
+
+        scroll_x.pack(side=BOTTOM,fill=X)
+        scroll_y.pack(side=RIGHT,fill=Y)
+
+        scroll_x.config(command=self.criminal_table.xview)
+        scroll_y.config(command=self.criminal_table.yview)
+
+        self.criminal_table.heading('1',text='CaseId')
+        self.criminal_table.heading('2', text="CrimeNo")
+        self.criminal_table.heading('3', text='Criminal Name')
+        self.criminal_table.heading('4', text='NickName')
+        self.criminal_table.heading('5', text='ArrestDate')
+        self.criminal_table.heading('6', text='CrimeOfDate')
+        self.criminal_table.heading('7', text='Address')
+        self.criminal_table.heading('8', text='Age')
+        self.criminal_table.heading('9', text='Occupation')
+        self.criminal_table.heading('10', text='Birth Mark')
+        self.criminal_table.heading('11', text='Crime Type')
+        self.criminal_table.heading('12', text='Father Name')
+        self.criminal_table.heading('13', text='Gender')
+        self.criminal_table.heading('14', text='Wanted')
+
+        self.criminal_table['show'] = 'headings'
+
+        self.criminal_table.column("1",width=100)
+        self.criminal_table.column("2", width=100)
+        self.criminal_table.column("3", width=100)
+        self.criminal_table.column("4", width=100)
+        self.criminal_table.column("5", width=100)
+        self.criminal_table.column("6", width=100)
+        self.criminal_table.column("7", width=100)
+        self.criminal_table.column("8", width=100)
+        self.criminal_table.column("9", width=100)
+        self.criminal_table.column("10", width=100)
+        self.criminal_table.column("11", width=100)
+        self.criminal_table.column("12", width=100)
+        self.criminal_table.column("13", width=100)
+        self.criminal_table.column("14", width=100)
+
+        self.criminal_table.pack(fill=BOTH,expand=1)
         
 if __name__ =="__main__":
     root=Tk()
