@@ -197,7 +197,7 @@ class Criminal:
         btn_add.grid(row=0,column=1,padx=3,pady=5, sticky=W)
         
         #Delete button
-        btn_add=Button(button_frame,text='Delete',font =('arial', 12, 'bold'),width=14, bg='blue',fg='white')
+        btn_add=Button(button_frame,command=self.delete_data,text='Delete',font =('arial', 12, 'bold'),width=14, bg='blue',fg='white')
         btn_add.grid(row=0,column=2,padx=3,pady=5,sticky=W)
         
         #Clear button
@@ -304,26 +304,50 @@ if __name__ =="__main__":
     root=Tk()
     obj=Criminal(root)
     root.mainloop()
-  
-
-#serch
-def serch_data(self):
-    if self.var_com_search.get()=="":
-        messagebox.showerror('Error','All fields are required')
-    else:
-        try:
-            conn=mysql.connector.connect(host='localhost',username='root',password='')
-            my_cursor=conn.cursor()
-            my_cursor.execute('select * from criminal1 where ' +str(self.var_com_search.get())+" LIKE'%"+str(self.var_search.get()+"%'"))
-            rows=my_cursor.fetchall()
-            if len(rows) !=0:
-                self.criminal_table.delete(*self.criminal_table.get_children())
-                for i in rows:
-                    self.criminal_table.insert("",END,values=i)
-            conn.commit()
+    
+    
+        #delete
+        def delete_data(self):
+            if self.var_case_id.get()=="":
+                messagebox.showerror('Error','All fields are required')
+            else:
+                try:
+                    Delete= messagebox.askyesno('Delete','Are you sure delete this criminal record')
+                    if Delete>0:
+                        conn=mysql.connector.connect(host='localhost',username='root',password='')
+                        my_cursor=conn.cursor()
+                        sql='delete from criminal1 where Case_id=%s'
+                        value=(self.var_case_id.get(),)
+                        my_cursor.execute(sql,value)
+                    else:
+                        if not Delete:
+                            return
+                    conn.commit()
+                    self.fetch_data()
+                    messagebox.showinfo('Success','Criminal record successfully deleted')
+                except Exception as es:
+                    messagebox.showerror('Error',f'Due to {str(es)}')
             conn.close()
-        except Exception as es:
-            messagebox.showerror('Error',f'Due to {str(es)}')
+
+
+        #serch
+        def serch_data(self):
+            if self.var_com_search.get()=="":
+                messagebox.showerror('Error','All fields are required')
+            else:
+                try:
+                    conn=mysql.connector.connect(host='localhost',username='root',password='',database='')
+                    my_cursor=conn.cursor()
+                    my_cursor.execute('select * from criminal1 where ' +str(self.var_com_search.get())+" LIKE'%"+str(self.var_search.get()+"%'"))
+                    rows=my_cursor.fetchall()
+                    if len(rows) !=0:
+                        self.criminal_table.delete(*self.criminal_table.get_children())
+                        for i in rows:
+                            self.criminal_table.insert("",END,values=i)
+                    conn.commit()
+                    conn.close()
+                except Exception as es:
+                    messagebox.showerror('Error',f'Due to {str(es)}')
         
         
         #get cursor
