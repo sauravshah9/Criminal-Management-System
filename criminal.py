@@ -324,4 +324,68 @@ def serch_data(self):
             conn.close()
         except Exception as es:
             messagebox.showerror('Error',f'Due to {str(es)}')
-                    
+        
+        
+        #get cursor
+
+        def get_cursor(self,event=""):
+            cursur_row = self.criminal_table.focus()
+            content = self.criminal_table.item(cursur_row)
+            data = content['values']
+
+            self.var_case_id.set(data[0])
+            self.var_criminal_no.set(data[1])
+            self.var_name.set(data[2])
+            self.var_nickname.set(data[3])
+            self.var_arrest_date.set(data[4])
+            self.var_date_of_crime.set(data[5])
+            self.var_address.set(data[6])
+            self.var_age.set(data[7])
+            self.var_occupation.set(data[8])
+            self.var_birthMark.set(data[9])
+            self.var_crime_type.set(data[10])
+            self.var_father_name.set(data[11])
+            self.var_gender.set(data[12])
+            self.var_wanted.set(data[13])
+
+            #above add function
+            #self.criminal_table.bind("<ButtonRelease>,self.get_cursor")
+
+        #update
+
+        def update_data(self):
+            if self.var_case_id.get()=="":
+                messagebox.showerror('Error','All Fields are required')
+            else:
+                try:
+                    update = messagebox.askyesno('Update','Are you sure, update this criminal record?')
+                    if update>0:
+                        conn = mysql.conndector.connect()
+                        my_cursor = conn.cursor()
+                        my_cursor.execute('update criminal1 set Criminal_no=%s, Nick_name=%s, arrest_date=%s, dateOfcrime=%s, address=%s, age=%s, occupation=%s, BirthMark=%s, crimeType=%s, fatherName=%s, gender=%s, wanted=%s where Case_id=%s',(
+
+                                                                                                                                                                                                                                                    self.var_criminal_no.get(),
+                                                                                                                                                                                                                                                    self.var_name.get(),
+                                                                                                                                                                                                                                                    self.var_nickname.get(),
+                                                                                                                                                                                                                                                    self.var_arrest_date.get(),
+                                                                                                                                                                                                                                                    self.var_date_of_crime.get(),
+                                                                                                                                                                                                                                                    self.var_address.get(),
+                                                                                                                                                                                                                                                    self.var_age.get(),
+                                                                                                                                                                                                                                                    self.var_occupation.get(),
+                                                                                                                                                                                                                                                    self.var_birthMark.get(),
+                                                                                                                                                                                                                                                    self.var_crime_type.get(),
+                                                                                                                                                                                                                                                    self.var_father_name.get(),
+                                                                                                                                                                                                                                                    self.var_gender.get(),
+                                                                                                                                                                                                                                                    self.var_wanted.get(),
+                                                                                                                                                                                                                                                    self.var_case_id.get()
+                                                                                                                                                                                                                                                    ))
+                    else:
+                        if not update:
+                            return
+                    conn.commit()
+                    self.fetch_data()
+                    conn.close()
+                    messagebox.showinfo('Success','Criminal record has been successfully updated')
+                except Exception as es:
+                    messagebox.showerror('Error',f'Due to{str(es)}')
+
