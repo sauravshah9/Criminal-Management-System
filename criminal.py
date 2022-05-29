@@ -228,7 +228,8 @@ class Criminal:
 
         search_by=Label(search_frame,text='Search By:',font =('arial', 11, 'bold'), fg="white", bg="red")
         search_by.grid(row=0,column=0,padx=5,sticky=W)
-
+        
+        self.var_com_search = StringVar()
         combo_search_box=ttk.Combobox(search_frame,font=("arial", 11, "bold"),width=18 ,state='readonly')
         combo_search_box['value']=('Select Option', 'Case_id', 'Criminal_no')
         combo_search_box.current(0)
@@ -238,11 +239,11 @@ class Criminal:
         search_txt.grid(row=0,column=2,padx=2,pady=5)
 
         #Search Button
-        btn_search=Button(search_frame,text='Search',font =('arial', 13, 'bold'),width=14, bg='blue',fg='white')
+        btn_search=Button(search_frame,command=serch_data,text='Search',font =('arial', 13, 'bold'),width=14, bg='blue',fg='white')
         btn_search.grid(row=0,column=3,padx=3,pady=2)
         
         #All button
-        btn_all=Button(search_frame,text='Show All',font =('arial', 13, 'bold'),width=14, bg='blue',fg='white')
+        btn_all=Button(search_frame,command=self.fetch_data,text='Show All',font =('arial', 13, 'bold'),width=14, bg='blue',fg='white')
         btn_all.grid(row=0,column=4,padx=3,pady=2)
         
         crimeagency = Label(search_frame, text='NATIONAL CRIME AGENCY', font=('arial', 30, 'bold'), fg="crimson", bg="white")
@@ -303,3 +304,24 @@ if __name__ =="__main__":
     root=Tk()
     obj=Criminal(root)
     root.mainloop()
+  
+
+#serch
+def serch_data(self):
+    if self.var_com_search.get()=="":
+        messagebox.showerror('Error','All fields are required')
+    else:
+        try:
+            conn=mysql.connector.connect(host='localhost',username='root',password='')
+            my_cursor=conn.cursor()
+            my_cursor.execute('select * from criminal1 where ' +str(self.var_com_search.get())+" LIKE'%"+str(self.var_search.get()+"%'"))
+            rows=my_cursor.fetchall()
+            if len(rows) !=0:
+                self.criminal_table.delete(*self.criminal_table.get_children())
+                for i in rows:
+                    self.criminal_table.insert("",END,values=i)
+            conn.commit()
+            conn.close()
+        except Exception as es:
+            messagebox.showerror('Error',f'Due to {str(es)}')
+                    
